@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\User; // 追加
+
 class UsersController extends Controller
 {
     public function index()
@@ -56,5 +58,36 @@ class UsersController extends Controller
         $data += $this->counts($user);
 
         return view('users.followers', $data);
+    }
+    
+    
+        public function favorite($id)
+    {
+        $user = User::find($id);
+        $favoriting = $user->favoriting()->paginate(10);
+
+        $data = [
+            'user' => $user,
+            'microposts' => $favoriting,
+        ];
+
+        $data += $this->counts($user);
+
+        return view('users.favorites', $data);
+    }
+
+    public function favoriter($id)
+    {
+        $user = User::find($id);
+        $favoriter = $user->favoriter()->paginate(10);
+
+        $data = [
+            'user' => $user,
+            'users' => $favoriter,
+        ];
+
+        $data += $this->counts($user);
+
+        return view('users.favoriter', $data);
     }
 }
